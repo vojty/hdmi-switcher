@@ -16,9 +16,10 @@ from gi.repository import AppIndicator3 as appindicator
 APPINDICATOR_ID = 'hdmi-switcher'
 
 def main():
+    icon_path = os.path.dirname(os.path.abspath(__file__)) + '/television.svg'
     indicator = appindicator.Indicator.new(
         APPINDICATOR_ID,
-        os.path.abspath('television.svg'),
+        icon_path,
         appindicator.IndicatorCategory.SYSTEM_SERVICES
     )
     indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
