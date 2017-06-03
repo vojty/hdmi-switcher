@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Based on http://candidtim.github.io/appindicator/2014/09/13/ubuntu-appindicator-step-by-step.html
+
 import os
 import signal
 import gi
