@@ -52,20 +52,36 @@ def build_menu():
     menu.show_all()
     return menu
 
+def call_bash(cmd):
+    p = subprocess.Popen(
+        cmd,
+        shell=True,
+        stdout=subprocess.PIPE
+    )
+    out, err = p.communicate()
+    return out.decode('utf-8').replace('\n', '')
+
 # To detect video devices run: xrandr
 def enable_hdmi_screen(source):
-    subprocess.Popen('xrandr --output DVI-0 --off\nxrandr --output HDMI-0 --auto --right-of DVI-1', shell=True)
+    call_bash('xrandr --output DVI-0 --off\nxrandr --output HDMI-0 --auto --right-of DVI-1')
 
 def enable_desktop_screen(source):
-    subprocess.Popen('xrandr --output HDMI-0 --off\nxrandr --output DVI-0 --auto --right-of DVI-1', shell=True)
+    call_bash('xrandr --output HDMI-0 --off\nxrandr --output DVI-0 --auto --right-of DVI-1')
+
+def get_hdmi_sound_index():
+    return call_bash('pactl list short sinks | grep hdmi | grep -o -E \'^[0-9]+\'')
+
+def get_desktop_sound_index():
+    return call_bash('pactl list short sinks | grep analog | grep -o -E \'^[0-9]+\'')
 
 # To detect audio devices run: pactl list short sinks
 def enable_hdmi_sound(source):
-    subprocess.Popen('./change_audio.sh 0', shell=True)
+    index = get_hdmi_sound_index()
+    call_bash('./change_audio.sh ' + index)
 
 def enable_desktop_sound(source):
-    subprocess.Popen('./change_audio.sh 1', shell=True)
-
+    index = get_desktop_sound_index()
+    call_bash('./change_audio.sh ' + index)
 
 def quit(source):
     gtk.main_quit()
